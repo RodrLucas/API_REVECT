@@ -142,10 +142,10 @@ class CustomerController {
     }
 
     // Buscando ID pelo request.params
-    const { customer_id } = request.params
+    const { id } = request.params
 
     // retornar customer do banco de dados pelo ID
-    const customer = await Customer.findByPk(customer_id)
+    const customer = await Customer.findByPk(id)
 
     // Validando se o Customer existe no banco de dados
     if (!customer) {
@@ -173,24 +173,24 @@ class CustomerController {
     } = request.body
 
     // Validando se o CPF é válido
-    // if (cpf) {
-    //   if (!validarCPF(cpf)) {
-    //     return response.status(400).json({ error: 'CPF inválido' })
-    //   }
-    // }
+    if (cpf) {
+      if (!validarCPF(cpf) || cpf === '') {
+        return response.status(409).json({ error: 'CPF inválido' })
+      }
+    }
 
     // Validando se o cell_phone é valido
-    // if (
-    //   !validator(cell_phone, {
-    //     codigoAreaPossivel: true,
-    //     codigoPaisPresente: true,
-    //     codigoPaisPossivel: true,
-    //   })
-    // ) {
-    //   return response
-    //     .status(400)
-    //     .json({ error: 'Celular inválido - Deve ser: +55 (DDD) 9XXXX-XXXX' })
-    // }
+    if (
+      !validator(cell_phone, {
+        codigoAreaPossivel: true,
+        codigoPaisPresente: true,
+        codigoPaisPossivel: true,
+      })
+    ) {
+      return response
+        .status(400)
+        .json({ error: 'Celular inválido - Deve ser: +55 (DDD) 9XXXX-XXXX' })
+    }
 
     // Enviando para o banco de dados e criando um novo client
     await Customer.update(
@@ -211,7 +211,7 @@ class CustomerController {
         country,
         postal_code,
       },
-      { where: { customer_id } }
+      { where: { id } }
     )
 
     return response.status(201).json()
