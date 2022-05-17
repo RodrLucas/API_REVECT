@@ -18,7 +18,7 @@ class CustomerController {
       email: Yup.string().email().required(),
       cpf: Yup.string().min(11).required(),
       genre: Yup.string().required(),
-      birth: Yup.date().max(new Date().toLocaleDateString()).required(),
+      birth: Yup.date().required(),
       cell_phone: Yup.string().required(),
       occupation: Yup.string(),
       street: Yup.string().required(),
@@ -62,7 +62,7 @@ class CustomerController {
 
     // Validando se o CPF é válido
     if (!validarCPF(cpf)) {
-      return response.status(400).json({ error: 'CPF inválido' })
+      return response.status(409).json({ error: 'CPF inválido' })
     }
 
     // Validando se um CPF já existe no banco de dados
@@ -122,7 +122,7 @@ class CustomerController {
       email: Yup.string().email(),
       cpf: Yup.string(),
       genre: Yup.string(),
-      birth: Yup.date().max(new Date().toLocaleDateString()),
+      birth: Yup.date(),
       cell_phone: Yup.string(),
       occupation: Yup.string(),
       street: Yup.string(),
